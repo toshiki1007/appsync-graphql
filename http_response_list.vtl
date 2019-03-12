@@ -1,0 +1,19 @@
+#set ($bodyObj = $util.parseJson($context.result.body))
+{
+	"statusCode": $context.result.statusCode,
+	"transactions": [
+          #foreach($transaction in $bodyObj.transactions)
+              {
+                  "transactionId" : "$transaction.transactionId",
+                  "serialNumber" : "$transaction.serialNumber",
+                  "transactionAmount" : "$transaction.transactionAmount",
+                  "transactionDate" : "$transaction.transactionDate",
+                  "transactionType" : "$transaction.transactionType",
+                  "tradingWalletId" : "$transaction.tradingWalletId",
+                  "tradingUserId" : "$transaction.tradingUserId",
+                  "walletId" : "$transaction.walletId"
+              }
+          #if($foreach.hasNext),#end
+          #end
+    ]
+}

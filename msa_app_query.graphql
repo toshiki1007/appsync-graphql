@@ -1,0 +1,51 @@
+query listItems {
+			listItems {
+				items{
+					itemId
+					buyerId
+					sellerId
+					itemName
+					author
+					price
+					description
+					itemImage
+					registerDate
+					sellingDate
+				}
+			}
+		}
+
+query listTransactions {
+  listTransactions(userId: "abcdefg"){
+    statusCode
+    transactions{
+      transactionId
+    }
+  }
+}
+
+query getWallet{
+  getWallet(userId:"123456"){
+    walletId
+    balance
+  }
+}
+
+query getUser{
+  getUser(userId:"11"){
+    userId
+  }
+}
+
+mutation createUser($createuserinput: CreateUserInput!) {
+  createUser(input: $createuserinput) {
+    userId
+  }
+}
+
+mutation createWallet {
+  createWallet(userId:"11") {
+    walletId
+    balance
+  }
+}

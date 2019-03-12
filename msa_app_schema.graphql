@@ -1,0 +1,207 @@
+input CreateItemInput {
+	sellerId: String!
+	itemName: String!
+	author: String!
+	price: Int!
+	description: String!
+	itemImage: String!
+}
+
+type CreateItemResponse {
+	statusCode: Int!
+	body: Item
+	errorMessage: String
+}
+
+input CreateUserInput {
+	userId: String!
+	mail: String!
+}
+
+input DeleteUserInput {
+	userId: String!
+}
+
+type Item {
+	itemId: String!
+	buyerId: String
+	sellerId: String!
+	itemName: String!
+	author: String!
+	price: Int!
+	description: String!
+	itemImage: String!
+	registerDate: String!
+	sellingDate: String
+}
+
+type ItemConnection {
+	items: [Item]
+	nextToken: String
+}
+
+input ListTransactionsInput {
+	userId: String!
+}
+
+type ListTransactionsResponse {
+	statusCode: Int!
+	transactions: [Transaction]
+}
+
+type Mutation {
+	updateBalance(
+		userId: String!,
+		tradingUserId: String!,
+		price: Int!,
+		typeFlg: String!
+	): UpdateBalanceResponse
+	createItem(Input: CreateItemInput!): CreateItemResponse
+	purchaseItem(userId: String!, itemId: String!): PurchaseItemResponse
+	createUser(input: CreateUserInput!): User
+	updateUser(input: UpdateUserInput!): User
+	deleteUser(input: DeleteUserInput!): User
+	createWallet(userId: String!): Wallet
+}
+
+type PurchaseItemResponse {
+	statusCode: Int!
+	body: Item!
+	errorMessage: String
+}
+
+type Query {
+	getItem(itemId: String!): Item
+	listItems(filter: TableItemFilterInput, limit: Int, nextToken: String): ItemConnection
+	listItemsBySellerIdIndex(sellerId: String!, first: Int, after: String): ItemConnection
+	listItemsByBuyerIdIndex(buyerId: String!, first: Int, after: String): ItemConnection
+	listTransactions(userId: String!): ListTransactionsResponse
+	getWallet(userId: String!): Wallet
+	getUser(userId: String!): User
+	listUsers(filter: TableUserFilterInput, limit: Int, nextToken: String): UserConnection
+}
+
+type Subscription {
+	onCreateUser(userId: String): User
+		@aws_subscribe(mutations: ["createUser"])
+	onUpdateUser(userId: String): User
+		@aws_subscribe(mutations: ["updateUser"])
+	onDeleteUser(userId: String): User
+		@aws_subscribe(mutations: ["deleteUser"])
+}
+
+input TableBooleanFilterInput {
+	ne: Boolean
+	eq: Boolean
+}
+
+input TableFloatFilterInput {
+	ne: Float
+	eq: Float
+	le: Float
+	lt: Float
+	ge: Float
+	gt: Float
+	contains: Float
+	notContains: Float
+	between: [Float]
+}
+
+input TableIDFilterInput {
+	ne: ID
+	eq: ID
+	le: ID
+	lt: ID
+	ge: ID
+	gt: ID
+	contains: ID
+	notContains: ID
+	between: [ID]
+	beginsWith: ID
+}
+
+input TableIntFilterInput {
+	ne: Int
+	eq: Int
+	le: Int
+	lt: Int
+	ge: Int
+	gt: Int
+	contains: Int
+	notContains: Int
+	between: [Int]
+}
+
+input TableItemFilterInput {
+	itemId: TableStringFilterInput
+	buyerId: TableStringFilterInput
+	sellerId: TableStringFilterInput
+	itemName: TableStringFilterInput
+	author: TableStringFilterInput
+	price: TableIntFilterInput
+	description: TableStringFilterInput
+	itemImage: TableStringFilterInput
+	registerDate: TableStringFilterInput
+	sellingDate: TableStringFilterInput
+}
+
+input TableStringFilterInput {
+	ne: String
+	eq: String
+	le: String
+	lt: String
+	ge: String
+	gt: String
+	contains: String
+	notContains: String
+	between: [String]
+	beginsWith: String
+}
+
+input TableUserFilterInput {
+	userId: TableStringFilterInput
+}
+
+type Transaction {
+	transactionId: String!
+	serialNumber: String!
+	transactionAmount: Int!
+	transactionDate: String!
+	transactionType: String!
+	tradingWalletId: String!
+	tradingUserId: String!
+	walletId: String!
+}
+
+type Transactions {
+	transactions: [Transaction]
+}
+
+type UpdateBalanceResponse {
+	statusCode: Int!
+	message: String
+}
+
+input UpdateUserInput {
+	userId: String!
+}
+
+type User {
+	userId: String!
+}
+
+type UserConnection {
+	items: [User]
+	nextToken: String
+}
+
+type Wallet {
+	walletId: String!
+	balance: Int!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}
